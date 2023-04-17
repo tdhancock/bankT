@@ -27,7 +27,6 @@ if (isMainThread) {
     for (let i = 0; i < numCPUs; i++) {
         const worker = new Worker(__filename);
         let msg = { id: i, start: Math.round(i * splitQty), end: Math.round(i * splitQty + splitQty) }
-        if(i == numCPUs - 1) msg = { id: i, start: Math.round(i * splitQty), end: Math.round(i * splitQty + splitQty) + 1}
  
         worker.postMessage(msg);
         worker.on('message', data => {
@@ -68,50 +67,51 @@ else { //worker
         let found = false;
 
         for(let i = start; i < end; i++){
-            found = false;
-            if(i != 2000 || i != 2001) {
+            parentPort.postMessage(`${i}`)
+            // found = false;
+            // if(i != 2000 || i != 2001) {
 
-                if(bcrypt.compareSync(emptyString, hashes[i])){
-                    found = true;
-                    parentPort.postMessage(`${hashes[i]} ${emptyString}`)
-                }
-                if(found == false){
-                    for(let ch of oneCh){
-                        if(bcrypt.compareSync(ch, hashes[i])){
-                            found = true;
-                            parentPort.postMessage(`${hashes[i]} ${ch}`)
-                            break;
-                        }
-                    }
-                }
-                if(found == false){
-                    for(let ch of twoCh){
-                        if(bcrypt.compareSync(ch, hashes[i])){
-                            found = true;
-                            parentPort.postMessage(`${hashes[i]} ${ch}`)
-                            break;
-                        }
-                    }
-                }
-                if(found == false){
-                    for(let pass of commonPasswords ){
-                        if(bcrypt.compareSync(pass, hashes[i])){
-                            found = true;
-                            parentPort.postMessage(`${hashes[i]} ${pass}`)
-                            break;
-                        }
-                    }
-                }
-                if(found == false){
-                    for(let ch of threeCh){
-                        if(bcrypt.compareSync(ch, hashes[i])){
-                            found = true;
-                            parentPort.postMessage(`${hashes[i]} ${ch}`)
-                            break;
-                        }
-                    }
-                }
-            }
+            //     if(bcrypt.compareSync(emptyString, hashes[i])){
+            //         found = true;
+            //         parentPort.postMessage(`${hashes[i]} ${emptyString}`)
+            //     }
+            //     if(found == false){
+            //         for(let ch of oneCh){
+            //             if(bcrypt.compareSync(ch, hashes[i])){
+            //                 found = true;
+            //                 parentPort.postMessage(`${hashes[i]} ${ch}`)
+            //                 break;
+            //             }
+            //         }
+            //     }
+            //     if(found == false){
+            //         for(let ch of twoCh){
+            //             if(bcrypt.compareSync(ch, hashes[i])){
+            //                 found = true;
+            //                 parentPort.postMessage(`${hashes[i]} ${ch}`)
+            //                 break;
+            //             }
+            //         }
+            //     }
+            //     if(found == false){
+            //         for(let pass of commonPasswords ){
+            //             if(bcrypt.compareSync(pass, hashes[i])){
+            //                 found = true;
+            //                 parentPort.postMessage(`${hashes[i]} ${pass}`)
+            //                 break;
+            //             }
+            //         }
+            //     }
+            //     if(found == false){
+            //         for(let ch of threeCh){
+            //             if(bcrypt.compareSync(ch, hashes[i])){
+            //                 found = true;
+            //                 parentPort.postMessage(`${hashes[i]} ${ch}`)
+            //                 break;
+            //             }
+            //         }
+            //     }
+            // }
         }
         process.exit()
     })
